@@ -9,10 +9,10 @@ public class InputManager : Singleton<InputManager>
 
     protected override void Init()
     {
-        input2KeyCodeDict.Add(InputEnum.MoveLeft, KeyCode.A);
-        input2KeyCodeDict.Add(InputEnum.MoveRight, KeyCode.D);
-        input2KeyCodeDict.Add(InputEnum.MoveUp, KeyCode.W);
-        input2KeyCodeDict.Add(InputEnum.MoveDown, KeyCode.S);
+        input2KeyCodeDict.Add(InputEnum.MoveLeft, KeyCode.LeftArrow);
+        input2KeyCodeDict.Add(InputEnum.MoveRight, KeyCode.RightArrow);
+        input2KeyCodeDict.Add(InputEnum.MoveUp, KeyCode.UpArrow);
+        input2KeyCodeDict.Add(InputEnum.MoveDown, KeyCode.DownArrow);
         input2KeyCodeDict.Add(InputEnum.Jump, KeyCode.Space);
 
         input2KeyCodeDict.Add(InputEnum.ShortCutSlot1, KeyCode.Alpha1);
