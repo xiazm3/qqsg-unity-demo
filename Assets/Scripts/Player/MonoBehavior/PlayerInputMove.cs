@@ -14,6 +14,8 @@ public class PlayerInputMove : MonoBehaviour
 
     [SerializeField]
     private float jumpSpeed = 5f;
+    [SerializeField]
+    private float climbAttachThreshold = 0.3f;
 
     public bool onPlatform => platformRigidbody.onPlatform;
 
@@ -171,7 +173,45 @@ public class PlayerInputMove : MonoBehaviour
         if (climbPlatform == null)
         {
             //Try find climbPlaytform
-            var collider = gravityRigidbody.CheckVerticalPlatform(Vector2.up* Mathf.Sign(inputY));
+            Collider2D collider = null;
+            if (onPlatform)
+            {
+                collider = gravityRigidbody.CheckVerticalPlatform(Vector2.up * Mathf.Sign(inputY));
+                if (collider == null)
+                {
+                    var left = gravityRigidbody.CheckVerticalPlatform(Vector2.left);
+                    var right = gravityRigidbody.CheckVerticalPlatform(Vector2.right);
+                    collider = left != null ? left : right;
+                }
+                if (collider == null)
+                {
+                    var list = Physics2D.OverlapCircleAll(transform.position, climbAttachThreshold, LayerMask.GetMask("ClimbPlatform"));
+                    float nearestDist = float.MaxValue;
+                    Collider2D nearestCol = null;
+                    foreach (var c in list)
+                    {
+                        var p = c.GetComponent<Platform>();
+                        if (p == null)
+                            continue;
+                        var nearest = p.NearestPointOnLine(this.transform.position);
+                        var dist = (nearest - this.transform.position).magnitude;
+                        if (dist < nearestDist)
+                        {
+                            nearestDist = dist;
+                            nearestCol = c;
+                        }
+                    }
+                    collider = nearestCol;
+                }
+            }
+            else
+            {
+                var left = gravityRigidbody.CheckVerticalPlatform(Vector2.left);
+                var right = gravityRigidbody.CheckVerticalPlatform(Vector2.right);
+                collider = left != null ? left : right;
+                if (collider == null)
+                    collider = gravityRigidbody.CheckVerticalPlatform(Vector2.up);
+            }
             if(collider != null)
             {
                 climbPlatform = collider.GetComponent<Platform>();
@@ -181,17 +221,19 @@ public class PlayerInputMove : MonoBehaviour
         }
 
 
-        //¼ì²éÊÇ²»ÊÇÄÜ¹»¹ÒÉÏÈ¥
+        //ï¿½ï¿½ï¿½ï¿½Ç²ï¿½ï¿½ï¿½ï¿½Ü¹ï¿½ï¿½ï¿½ï¿½ï¿½È¥
         if (climbPlatform != null)
         {
             var platformX = climbPlatform.transform.position.x;
             var xDiffNeed = needClimbPos.x - platformX;
             var xDiff = transform.position.x - platformX;
+            var nearest = climbPlatform.NearestPointOnLine(this.transform.position);
+            var perpendicularDistance = (nearest - this.transform.position).magnitude;
 
-            //µ½vertical platformÎ»ÖÃÁË
-            if (xDiff * xDiffNeed <=0)
+            //ï¿½ï¿½vertical platformÎ»ï¿½ï¿½ï¿½ï¿½
+            if (xDiff * xDiffNeed <=0 || (onPlatform && perpendicularDistance <= climbAttachThreshold))
             {
-                this.transform.position = climbPlatform.NearestPointOnLine(this.transform.position);
+                this.transform.position = nearest;
                 platformRigidbody.LandPlatformFromJump(climbPlatform);
             }
 
