@@ -10,7 +10,7 @@ public class MonsterConfig
     public string Name;
     public int Level;
 
-    //targetHudÍ¼±êid ÒÔ¼° prefabId
+    //targetHudå›¾æ ‡id ä»¥åŠ prefabId
     public uint ViewId;
 
     public int MaxHP;
@@ -33,10 +33,10 @@ public class MonsterConfig
 
 public enum MonsterNameEnum
 {
-    ÖñÒ¶Çà=1,
-    Ğ¡â¨ºï =2,
-    ×Ïõõ = 3,
-    Ğ¡ºìÖí = 4,
+    ç«¹å¶é’=1,
+    å°çŒ•çŒ´ =2,
+    ç´«è²‚ = 3,
+    å°çº¢çŒª = 4,
 }
 
 public class MonsterConfigManager
@@ -46,10 +46,10 @@ public class MonsterConfigManager
 
     static MonsterConfigManager()
     {
-        AddConfig(new MonsterConfig() {TemplateId = 1, Name="ÖñÒ¶Çà", ViewId = 3701,Level = 1, MaxHP = 88,MaxMP=0, AttackSoundID="3701",HitSoundID="7001", DeathSoundID="7001" });
-        AddConfig(new MonsterConfig() {TemplateId = 2, Name="Ğ¡â¨ºï", ViewId = 3703,Level = 2, MaxHP = 145,MaxMP=0, AttackSoundID="3703",HitSoundID="7002", DeathSoundID="7002" });
-        AddConfig(new MonsterConfig() {TemplateId = 3, Name="×Ïõõ", ViewId = 3707,Level = 3, MaxHP = 178,MaxMP=0, AttackSoundID = "3707",HitSoundID="7003",DeathSoundID="7003"});
-        AddConfig(new MonsterConfig() {TemplateId = 4, Name="Ğ¡ºìÖí", ViewId = 3714,Level = 4, MaxHP = 231,MaxMP=0 ,AttackSoundID="3714",HitSoundID="7004",DeathSoundID="7004"});
+        AddConfig(new MonsterConfig() {TemplateId = 1, Name="ç«¹å¶é’", ViewId = 3701,Level = 1, MaxHP = 88,MaxMP=0, AttackSoundID="3701",HitSoundID="7001", DeathSoundID="7001" });
+        AddConfig(new MonsterConfig() {TemplateId = 2, Name="å°çŒ•çŒ´", ViewId = 3703,Level = 2, MaxHP = 145,MaxMP=0, AttackSoundID="3703",HitSoundID="7002", DeathSoundID="7002" });
+        AddConfig(new MonsterConfig() {TemplateId = 3, Name="ç´«è²‚", ViewId = 3707,Level = 3, MaxHP = 178,MaxMP=0, AttackSoundID = "3707",HitSoundID="7003",DeathSoundID="7003"});
+        AddConfig(new MonsterConfig() {TemplateId = 4, Name="å°çº¢çŒª", ViewId = 3714,Level = 4, MaxHP = 231,MaxMP=0 ,AttackSoundID="3714",HitSoundID="7004",DeathSoundID="7004"});
     }
 
     private static void AddConfig(MonsterConfig equipConfig)

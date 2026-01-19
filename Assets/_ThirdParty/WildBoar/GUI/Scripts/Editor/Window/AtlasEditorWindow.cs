@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -63,6 +63,13 @@ namespace WildBoar.GUIModule
                 SetAtlas(newAtlas);
             }
 
+            if (spriteAtlas != null)
+            {
+                if (GUILayout.Button("一键导出全部图片为UGUI Sprite"))
+                {
+                    ExportAllToUGUISprites();
+                }
+            }
 
 
 
@@ -123,6 +130,50 @@ namespace WildBoar.GUIModule
             EditorUtility.SetDirty(spriteAtlas);
             AssetDatabase.SaveAssets();
             SetAtlas(spriteAtlas);
+        }
+
+        private void ExportAllToUGUISprites()
+        {
+            var folder = EditorUtility.OpenFolderPanel("选择导出文件夹", Application.dataPath, "UGUISprites");
+            if (string.IsNullOrEmpty(folder)) return;
+            var inProject = folder.Replace("\\", "/").StartsWith(Application.dataPath.Replace("\\", "/"));
+            if (!inProject)
+            {
+                folder = Path.Combine(Application.dataPath, "UGUISprites");
+                Directory.CreateDirectory(folder);
+            }
+            var list = spriteAtlas.GetSpriteDataWithStandaloneTextureList();
+            foreach (var data in list)
+            {
+                var tex = data.Texture;
+                if (tex == null) continue;
+                tex.Apply();
+                var bytes = tex.EncodeToPNG();
+                var fileName = data.Name;
+                if (string.IsNullOrEmpty(fileName)) fileName = "sprite";
+                var absPath = Path.Combine(folder, fileName + ".png");
+                var dir = Path.GetDirectoryName(absPath);
+                if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+                File.WriteAllBytes(absPath, bytes);
+                var relPath = Path.Combine("Assets", Path.GetRelativePath(Application.dataPath, absPath));
+                relPath = relPath.Replace("\\", "/");
+                AssetDatabase.ImportAsset(relPath, ImportAssetOptions.ForceUpdate);
+                var importer = AssetImporter.GetAtPath(relPath) as TextureImporter;
+                if (importer != null)
+                {
+                    importer.textureType = TextureImporterType.Sprite;
+                    importer.spriteImportMode = SpriteImportMode.Single;
+                    importer.spritePixelsPerUnit = 100f;
+                    importer.spritePivot = data.Pivot;
+                    importer.spriteBorder = data.Slice9Padding;
+                    importer.alphaIsTransparency = true;
+                    importer.mipmapEnabled = false;
+                    importer.filterMode = FilterMode.Point;
+                    AssetDatabase.WriteImportSettingsIfDirty(relPath);
+                    AssetDatabase.ImportAsset(relPath, ImportAssetOptions.ForceUpdate);
+                }
+            }
+            AssetDatabase.Refresh();
         }
     }
 }
