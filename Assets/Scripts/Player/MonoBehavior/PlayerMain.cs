@@ -90,9 +90,9 @@ public class PlayerMain : MonoBehaviour, IHasSceneUnitInfo
             HP = 10000,
             MaxMP= 6000,
             MP= 6000,
-            Name ="Íæ¼Ò1",
+            Name ="çŽ©å®¶1",
             SelfGameObj = this.gameObject,
-            ///TODO Ìí¼Ó <see cref="StateManagerBase"/> ?
+            ///TODO æ·»åŠ  <see cref="StateManagerBase"/> ?
         };
     }
 

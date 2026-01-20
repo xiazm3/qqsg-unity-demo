@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -34,7 +34,8 @@ public abstract class StateManagerBase : MonoBehaviour
 
     public void Update()
     {
-        currentState.OnUpdate();
+        if (currentState != null)
+            currentState.OnUpdate();
 
         if(TryGetNewState(out var newState))
             EnterNewState(newState);
