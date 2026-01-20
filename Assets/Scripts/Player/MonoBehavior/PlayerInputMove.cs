@@ -157,7 +157,7 @@ public class PlayerInputMove : MonoBehaviour
     {
         bool wantClimbUpOnPlatform = (inputY > 0) && onPlatform;
         bool wantClimbDownOnPlatform = (inputY < 0) && onPlatform && gravityRigidbody.CheckVerticalPlatform(Vector2.down) != null;
-        bool needClimbWhenJump = (inputY > 0);
+        bool needClimbWhenJump = (inputY != 0);
 
         bool needClimb = needClimbWhenJump || wantClimbUpOnPlatform || wantClimbDownOnPlatform;
 
@@ -211,7 +211,27 @@ public class PlayerInputMove : MonoBehaviour
                 var right = gravityRigidbody.CheckVerticalPlatform(Vector2.right);
                 collider = left != null ? left : right;
                 if (collider == null)
-                    collider = gravityRigidbody.CheckVerticalPlatform(Vector2.up);
+                    collider = gravityRigidbody.CheckVerticalPlatform(inputY > 0 ? Vector2.up : Vector2.down);
+                if (collider == null)
+                {
+                    var list = Physics2D.OverlapCircleAll(transform.position, climbAttachThreshold, LayerMask.GetMask("ClimbPlatform"));
+                    float nearestDist = float.MaxValue;
+                    Collider2D nearestCol = null;
+                    foreach (var c in list)
+                    {
+                        var p = c.GetComponent<Platform>();
+                        if (p == null)
+                            continue;
+                        var nearest = p.NearestPointOnLine(this.transform.position);
+                        var dist = (nearest - this.transform.position).magnitude;
+                        if (dist < nearestDist)
+                        {
+                            nearestDist = dist;
+                            nearestCol = c;
+                        }
+                    }
+                    collider = nearestCol;
+                }
             }
             if(collider != null)
             {
@@ -236,7 +256,7 @@ public class PlayerInputMove : MonoBehaviour
             var nearest = climbPlatform.NearestPointOnLine(this.transform.position);
             var perpendicularDistance = (nearest - this.transform.position).magnitude;
 
-            if (xDiff * xDiffNeed <=0 || (onPlatform && perpendicularDistance <= climbAttachThreshold))
+            if (xDiff * xDiffNeed <=0 || perpendicularDistance <= climbAttachThreshold)
             {
                 this.transform.position = nearest;
                 platformRigidbody.LandPlatformFromJump(climbPlatform);
