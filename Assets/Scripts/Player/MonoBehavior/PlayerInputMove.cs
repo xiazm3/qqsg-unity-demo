@@ -155,10 +155,11 @@ public class PlayerInputMove : MonoBehaviour
 
     private void HandleClimb()
     {
-        bool needClimbWhenOnPlatform = (inputY != 0) && (onPlatform);
+        bool wantClimbUpOnPlatform = (inputY > 0) && onPlatform;
+        bool wantClimbDownOnPlatform = (inputY < 0) && onPlatform && gravityRigidbody.CheckVerticalPlatform(Vector2.down) != null;
         bool needClimbWhenJump = (inputY > 0);
 
-        bool needClimb = needClimbWhenJump || needClimbWhenOnPlatform;
+        bool needClimb = needClimbWhenJump || wantClimbUpOnPlatform || wantClimbDownOnPlatform;
 
         if (!needClimb)
         {
@@ -221,16 +222,20 @@ public class PlayerInputMove : MonoBehaviour
         }
 
 
-        //����ǲ����ܹ�����ȥ
         if (climbPlatform != null)
         {
+            var topY = Mathf.Max(climbPlatform.StartPoint.y, climbPlatform.EndPoint.y);
+            if (onPlatform && platformRigidbody.PlatformDirect == Platform.Direction.Horizontal && transform.position.y >= topY - climbAttachThreshold && inputY > 0)
+            {
+                climbPlatform = null;
+                return;
+            }
             var platformX = climbPlatform.transform.position.x;
             var xDiffNeed = needClimbPos.x - platformX;
             var xDiff = transform.position.x - platformX;
             var nearest = climbPlatform.NearestPointOnLine(this.transform.position);
             var perpendicularDistance = (nearest - this.transform.position).magnitude;
 
-            //��vertical platformλ����
             if (xDiff * xDiffNeed <=0 || (onPlatform && perpendicularDistance <= climbAttachThreshold))
             {
                 this.transform.position = nearest;
