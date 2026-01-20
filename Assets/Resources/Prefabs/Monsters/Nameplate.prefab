@@ -57,7 +57,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -8529811963141548944, guid: 40d6965af76f6704dbf31a0b22e10fea, type: 2}
+  - {fileID: 6513270381887693118, guid: 9d89f948c7a9a9b4393faf5e41746e09, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -101,8 +101,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u602A\u7269"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 40d6965af76f6704dbf31a0b22e10fea, type: 2}
-  m_sharedMaterial: {fileID: -8529811963141548944, guid: 40d6965af76f6704dbf31a0b22e10fea, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 9d89f948c7a9a9b4393faf5e41746e09, type: 2}
+  m_sharedMaterial: {fileID: 6513270381887693118, guid: 9d89f948c7a9a9b4393faf5e41746e09, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
