@@ -250,6 +250,12 @@ public class PlayerInputMove : MonoBehaviour
                 climbPlatform = null;
                 return;
             }
+            var bottomY = Mathf.Min(climbPlatform.StartPoint.y, climbPlatform.EndPoint.y);
+            if (onPlatform && platformRigidbody.PlatformDirect == Platform.Direction.Horizontal && transform.position.y <= bottomY + climbAttachThreshold && inputY < 0)
+            {
+                climbPlatform = null;
+                return;
+            }
             var platformX = climbPlatform.transform.position.x;
             var xDiffNeed = needClimbPos.x - platformX;
             var xDiff = transform.position.x - platformX;
