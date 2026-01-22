@@ -32,6 +32,11 @@ public class PlayerInputMove : MonoBehaviour
     private Platform climbPlatform;
     private Vector3 needClimbPos;
 
+    private bool autoMoveActive;
+    private float autoMoveX;
+
+    public bool IsAutoMoveActive => autoMoveActive;
+
     void Start()
     {
         platformRigidbody= GetComponent<PlatformRigidBody>();
@@ -56,6 +61,18 @@ public class PlayerInputMove : MonoBehaviour
             inputY = 1;
         if (InputManager.Instance.GetInput(InputEnum.MoveDown))
             inputY = -1;
+
+        if (autoMoveActive)
+        {
+            if (Mathf.Abs(inputX) > 0.01f)
+            {
+                StopAutoMoveX();
+            }
+            else
+            {
+                inputX = autoMoveX;
+            }
+        }
 
         if(PlayerSingleton.Instance.State.CanInput())
         {
@@ -270,6 +287,18 @@ public class PlayerInputMove : MonoBehaviour
 
         }
 
+    }
+
+    public void SetAutoMoveX(float direction)
+    {
+        autoMoveActive = true;
+        autoMoveX = Mathf.Clamp(direction, -1f, 1f);
+    }
+
+    public void StopAutoMoveX()
+    {
+        autoMoveActive = false;
+        autoMoveX = 0;
     }
 
 

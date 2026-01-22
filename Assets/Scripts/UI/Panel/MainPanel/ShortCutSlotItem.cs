@@ -1,4 +1,4 @@
-﻿using Assets.Scripts.ScriptableObj;
+using Assets.Scripts.ScriptableObj;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,12 +16,16 @@ public class ShortCutSlotItem
 
     public bool TryUseAndRetCoolDown(out float coolDown)
     {
-        if(Skill !=null && player.State.CanUseSkill() && Skill.CanUseSkill(player.PlayerMain.SceneUnitInfo))
+        if(Skill !=null && player.State.CanUseSkill())
         {
-            player.PlayerMain.SceneUnitSkill.UseSkill(Skill);
+            player.PlayerMain.SceneUnitSkill.TryAutoSelectTarget();
+            if (Skill.CanUseSkill(player.PlayerMain.SceneUnitInfo))
+            {
+                player.PlayerMain.SceneUnitSkill.UseSkill(Skill);
 
-            coolDown= Skill.CoolDown;
-            return true;
+                coolDown= Skill.CoolDown;
+                return true;
+            }
         }
 
         coolDown= 0;

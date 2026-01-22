@@ -17,6 +17,19 @@ public partial class MouseManager : MonoBehaviour
 
     public static SceneUnitInfo FocusedSceneUnit { get; private set; }
 
+    public static void SetFocusedSceneUnit(IHasSceneUnitInfo sceneUnitInfoOwner)
+    {
+        if (sceneUnitInfoOwner == null)
+        {
+            FocusedSceneUnit = null;
+            OnClickSceneUnitMaybeNull(null);
+            return;
+        }
+
+        FocusedSceneUnit = sceneUnitInfoOwner.GetSceneUnit();
+        OnClickSceneUnitMaybeNull(sceneUnitInfoOwner);
+    }
+
     void Start()
     {
         defaultCursor2D = CopyCurosrTexture(defaultCursorSprite);
@@ -53,7 +66,7 @@ public partial class MouseManager : MonoBehaviour
 
     private void ChangeMouseSprite()
     {
-        //Êó±ê×ó¼ü
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         if(Input.GetMouseButtonDown(0))
         {
             Cursor.SetCursor(clickCursor2D, hotSpot, cursorMode);
@@ -79,12 +92,11 @@ public partial class MouseManager : MonoBehaviour
             if (hit.collider != null)
             {
                 var battleInfoHolder = hit.collider.GetComponent<IHasSceneUnitInfo>();
-                FocusedSceneUnit = battleInfoHolder.GetSceneUnit();
-                OnClickSceneUnitMaybeNull(battleInfoHolder);
+                SetFocusedSceneUnit(battleInfoHolder);
             }
             else
             {
-                OnClickSceneUnitMaybeNull(null);
+                SetFocusedSceneUnit(null);
             }
 
         }
