@@ -54,6 +54,8 @@ namespace WildBoar.GUIModule
 
 			this.spriteName = spriteName;
 			TryGetSpriteDataByName();
+			if (SpriteData == null)
+				return;
 
             Width = (int)SpriteData.Rect.width;
 			Height = (int)SpriteData.Rect.height;

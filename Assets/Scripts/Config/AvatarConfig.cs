@@ -160,7 +160,7 @@ public class AvatarConfig
                 (AvatarSlotTypeEnum.lhand, 1011),
                 (AvatarSlotTypeEnum.rhand, 1011),
                 (AvatarSlotTypeEnum.hair, 774),
-                (AvatarSlotTypeEnum.rweapon, 3414),
+                (AvatarSlotTypeEnum.rweapon, 1),
             };
         }
 

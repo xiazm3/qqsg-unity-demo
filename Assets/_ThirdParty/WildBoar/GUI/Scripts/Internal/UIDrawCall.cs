@@ -128,6 +128,8 @@ namespace WildBoar.GUIModule
 
         public void UpdateMesh(UIMeshInfo meshInfo)
         {
+            if (meshInfo == null)
+                return;
             var vertexList = meshInfo.vertexList;
             if (vertexList != null)
             {

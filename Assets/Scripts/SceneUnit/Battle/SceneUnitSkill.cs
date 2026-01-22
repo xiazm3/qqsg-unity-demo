@@ -69,10 +69,19 @@ public class SceneUnitSkill:MonoBehaviour
     {
         if (SceneUnit == null)
             return false;
-        if (SceneUnit.Target != null)
-            return true;
         if (SceneUnit.Platform == null)
             return false;
+        if (SceneUnit.Target != null)
+        {
+            if (SceneUnit.Target.Platform == null || !IsPlatformConnected(SceneUnit.Platform, SceneUnit.Target.Platform))
+            {
+                MouseManager.SetFocusedSceneUnit(null);
+            }
+            else
+            {
+                return true;
+            }
+        }
 
         var nearestOwner = FindNearestEnemyOwner();
         if (nearestOwner == null)
