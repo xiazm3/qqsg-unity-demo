@@ -71,6 +71,8 @@ public class SceneUnitSkill:MonoBehaviour
             return false;
         if (SceneUnit.Target != null)
             return true;
+        if (SceneUnit.Platform == null)
+            return false;
 
         var nearestOwner = FindNearestEnemyOwner();
         if (nearestOwner == null)
@@ -82,6 +84,9 @@ public class SceneUnitSkill:MonoBehaviour
 
     private IHasSceneUnitInfo FindNearestEnemyOwner()
     {
+        if (SceneUnit == null || SceneUnit.Platform == null)
+            return null;
+
         var monsters = GameObject.FindObjectsOfType<MonsterBoxColliderManager>();
         if (monsters == null || monsters.Length == 0)
             return null;
@@ -95,7 +100,9 @@ public class SceneUnitSkill:MonoBehaviour
                 continue;
 
             var info = monster.GetSceneUnit();
-            if (info == null || info.HP <= 0 || info.SelfGameObj == null)
+            if (info == null || info.HP <= 0 || info.SelfGameObj == null || info.Platform == null)
+                continue;
+            if (!IsPlatformConnected(SceneUnit.Platform, info.Platform))
                 continue;
 
             var diff = info.SelfGameObj.transform.position - selfPos;
@@ -108,6 +115,35 @@ public class SceneUnitSkill:MonoBehaviour
         }
 
         return nearest;
+    }
+
+    private bool IsPlatformConnected(Platform from, Platform to)
+    {
+        if (from == null || to == null)
+            return false;
+        if (from == to)
+            return true;
+
+        var visited = new HashSet<Platform>();
+        var queue = new Queue<Platform>();
+        queue.Enqueue(from);
+        visited.Add(from);
+
+        while (queue.Count > 0)
+        {
+            var current = queue.Dequeue();
+            if (current == null)
+                continue;
+            if (current == to)
+                return true;
+
+            if (current.PrevPlatform != null && visited.Add(current.PrevPlatform))
+                queue.Enqueue(current.PrevPlatform);
+            if (current.NextPlatform != null && visited.Add(current.NextPlatform))
+                queue.Enqueue(current.NextPlatform);
+        }
+
+        return false;
     }
 
     private IEnumerator AutoChaseToTarget()
