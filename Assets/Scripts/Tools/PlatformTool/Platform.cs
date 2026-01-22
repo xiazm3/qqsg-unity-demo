@@ -8,7 +8,7 @@ public interface IPlatformUser
     Vector3 Position { get; set; }
 }
 
-//实际上subPlatform
+//实锟斤拷锟斤拷subPlatform
 public class Platform : MonoBehaviour
 {
     public enum Direction
@@ -20,8 +20,7 @@ public class Platform : MonoBehaviour
 
     private bool inited;
 
-    //TODO 这里不是tranform， 当地行移动的时候会有问题，
-    //可能需要改成相对位置
+
     public Vector3 StartPoint;
     public Vector3 EndPoint;
 

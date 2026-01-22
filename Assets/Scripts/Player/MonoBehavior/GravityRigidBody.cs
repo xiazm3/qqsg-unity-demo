@@ -14,7 +14,7 @@ public class GravityRigidBody : MonoBehaviour
     private PlatformRigidBody platformRigidBody;
     private bool onPlatform => platformRigidBody.onPlatform;
 
-    //todo ºÍPlayerInputµÄVelocityÈßÓàÁË ¸Ð¾õÓ¦¸Ã¸Ä¸Ä
+    //todo ï¿½ï¿½PlayerInputï¿½ï¿½Velocityï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ð¾ï¿½Ó¦ï¿½Ã¸Ä¸ï¿½
     public Vector2 velocity;
 
     private const float gravityAcceleration = 9.8f;
@@ -71,7 +71,8 @@ public class GravityRigidBody : MonoBehaviour
 
     public Collider2D CheckHorizontalPlatform()
     {
-        return Physics2D.Raycast(transform.position, Vector2.down, groundCheckRadius, LayerMask.GetMask("Platform")).collider;
+        var dist = groundCheckRadius + Mathf.Abs(velocity.y) * Time.fixedDeltaTime;
+        return Physics2D.Raycast(transform.position, Vector2.down, dist, LayerMask.GetMask("Platform")).collider;
 
     }
 

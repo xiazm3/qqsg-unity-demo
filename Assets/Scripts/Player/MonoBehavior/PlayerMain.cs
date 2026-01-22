@@ -119,6 +119,7 @@ public class PlayerMain : MonoBehaviour, IHasSceneUnitInfo
         PlayerTrack.ResetTrackPos();
         if (CameraMove != null)
             CameraMove.SetCameraPosAsPlayer();
+        TryAttachToNearestPlatform();
     }
 
     public SceneUnitInfo GetSceneUnit()
@@ -135,5 +136,26 @@ public class PlayerMain : MonoBehaviour, IHasSceneUnitInfo
     public Transform GetViewRoot()
     {
         return AvatarHolder.transform;
+    }
+
+    private void TryAttachToNearestPlatform()
+    {
+        var mask = LayerMask.GetMask("Platform");
+        var hit = Physics2D.Raycast(transform.position, Vector2.down, 2f, mask).collider;
+        Collider2D c = hit;
+        if (c == null)
+        {
+            var list = Physics2D.OverlapCircleAll(transform.position, 0.3f, mask);
+            if (list != null && list.Length > 0)
+                c = list[0];
+        }
+        if (c == null)
+            return;
+        var p = c.GetComponent<Platform>();
+        if (p == null)
+            return;
+        var pos = p.NearestPointOnLine(transform.position);
+        transform.position = pos;
+        PlatformRigidBody.LandPlatformFromJump(p);
     }
 }
